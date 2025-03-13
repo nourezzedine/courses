@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau Interactif - Ezzedine</title>
+
+  <!-- Inclusion de jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Inclusion de DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <!-- Inclusion de DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+  <!-- Custom Style -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 24px;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      border: 1px solid #ddd;
+      background-color: white;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    td {
+      background-color: #f9f9f9;
+    }
+    tr:nth-child(even) td {
+      background-color: #f2f2f2;
+    }
+    tr:hover {
+      background-color: #ddd;
+    }
+    .dataTables_wrapper {
+      width: 90%;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enseignements 2019-2024 - Nour Ezzedine</h2>
+
+  <table id="myTable" class="display">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    $(document).ready(function() {
+      $.get('https://raw.githubusercontent.com/nourezzedine/EnseignementsEZZEDINE_CampagneMCF2025/refs/heads/main/EzzedineEnseignements20192024.csv', function(data) {
+        const rows = data.split('\n');
+        const headers = rows[0].split(',');
+
+        // Génération des en-têtes
+        let theadHtml = '<tr>';
+        headers.forEach(header => {
+          theadHtml += '<th>' + header + '</th>';
+        });
+        theadHtml += '</tr>';
+        $('#myTable thead').html(theadHtml);
+
+        // Génération des lignes du tableau
+        let tbodyHtml = '';
+        for (let i = 1; i < rows.length; i++) {
+          const cols = rows[i].split(',');
+          if (cols.length > 1) { // éviter les lignes vides
+            tbodyHtml += '<tr>';
+            cols.forEach(col => {
+              tbodyHtml += '<td>' + col + '</td>';
+            });
+            tbodyHtml += '</tr>';
+          }
+        }
+        $('#myTable tbody').html(tbodyHtml);
+
+        // Initialisation de DataTables
+        $('#myTable').DataTable({
+          paging: true,  // Pagination
+          searching: true,  // Recherche
+          ordering: true,  // Tri des colonnes
+          info: true  // Afficher l'information sur le nombre de résultats
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
